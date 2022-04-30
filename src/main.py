@@ -36,6 +36,29 @@ def get_all_characters():
     characters.serialize = list(map(lambda x: x.serialize(),characters))
     return jsonify({"response":characters.serialize}),200
 
+@app.route('/People/<int:people_id>', method=[GET])
+def get_one_character(people_id):
+    characters = Characters.query.all()
+    character= characters.filter("id"==people_id)
+    return jsonify({"response":character}),200
+
+@app.route('/Planets', method=[GET])
+def get_all_planets():
+    planets = Planets.query.all()
+    planets.serialize = list(map(lambda x: x.serialize(),planets))
+    return jsonify({"response":planets.serialize}),200
+
+@app.route('/Vehicles', method=[GET])
+def get_all_vehicles():
+    vehicles = Vehicles.query.all()
+    vehicles.serialize = list(map(lambda x: x.serialize(),vehiscles))
+    return jsonify({"response":planets.serialize}),200
+
+@app.route('/Users', method=[GET])
+def get_all_users():
+    users = Users.query.all()
+    users.serialize = list(map(lambda x: x.serialize(),users))
+    return jsonify({"response":users.serialize}),200
 
 
 # this only runs if `$ python src/main.py` is executed
