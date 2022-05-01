@@ -19,7 +19,7 @@ class User(db.Model):
             "email": self.email
         }
 
-class Favourites(db.Model):
+class Favorites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     favourite_user = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User')
@@ -33,10 +33,10 @@ class Favourites(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "favourite_user": self.favourite_user,
-            "favourite_char": self.favourite_char,
-            "favourite_planets": self.favourite_planets,
-            "favourite_vehicles": self.favourite_vehicles
+            "favorite_user": self.favourite_user,
+            "favorite_char": self.favourite_char,
+            "favorite_planets": self.favourite_planets,
+            "favorite_vehicles": self.favourite_vehicles
         }
 
 class Characters(db.Model):
