@@ -23,8 +23,8 @@ class Favorites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     favourite_user = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('Users')
-    favourite_char = db.Column(db.Integer, db.ForeignKey('characters.id'))
-    character = db.relationship('Characters')
+    favourite_char = db.Column(db.Integer, db.ForeignKey('people.id'))
+    character = db.relationship('People')
     favourite_planets = db.Column(db.Integer, db.ForeignKey('planets.id'))
     planets = db.relationship('Planets')
     favourite_vehicles = db.Column(db.Integer, db.ForeignKey('vehicles.id'))
@@ -39,7 +39,7 @@ class Favorites(db.Model):
             "favorite_vehicles": self.favourite_vehicles
         }
 
-class Characters(db.Model):
+class People(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
     description = db.Column(db.String(250))

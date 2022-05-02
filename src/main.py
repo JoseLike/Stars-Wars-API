@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, Users, People, Favorites, Vehicles, Planets
 #from models import Person
 
 app = Flask(__name__)
@@ -30,51 +30,51 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/People', method=[GET])
+@app.route('/People', methods=['GET'])
 def get_all_characters():
     characters = Characters.query.all()
     characters.serialize = list(map(lambda x: x.serialize(),characters))
     return jsonify({"response":characters.serialize}),200
 
-@app.route('/People/<int:people_id>', method=[GET])
+@app.route('/People/<int:people_id>', methods=['GET'])
 def get_one_character(people_id):
     character = Characters.query.get(people_id)
     return jsonify({"response":character.serialize()}),200
 
-@app.route('/Planets', method=[GET])
+@app.route('/Planets', methods=['GET'])
 def get_all_planets():
     planets = Planets.query.all()
     planets.serialize = list(map(lambda x: x.serialize(),planets))
     return jsonify({"response":planets.serialize}),200
 
-@app.route('/Planets/<int:planet_id>', method=[GET])
+@app.route('/Planets/<int:planet_id>', methods=['GET'])
 def get_one_planet(planet_id):
     planet = Planets.query.get(planet_id)
     return jsonify({"response":planet.serialize()}),200
 
-@app.route('/Vehicles', method=[GET])
+@app.route('/Vehicles', methods=['GET'])
 def get_all_vehicles():
     vehicles = Vehicles.query.all()
     vehicles.serialize = list(map(lambda x: x.serialize(),vehiscles))
     return jsonify({"response":planets.serialize}),200
 
-@app.route('/Vehicles/<int:vehicle_id>', method=[GET])
+@app.route('/Vehicles/<int:vehicle_id>', methods=['GET'])
 def get_one_vehicle(vehicle_id):
     vehicle = Vehicles.query.get(vehicle_id)
     return jsonify({"response":vehicle.serialize()}),200
 
-@app.route('/Users', method=[GET])
+@app.route('/Users', methods=['GET'])
 def get_all_users():
     users = Users.query.all()
     users.serialize = list(map(lambda x: x.serialize(),users))
     return jsonify({"response":users.serialize}),200
 
-@app.route('/Users/<int:user_id>', method=[GET])
+@app.route('/Users/<int:user_id>', methods=['GET'])
 def get_one_user(user_id):
     user = Users.query.get(user_id)
     return jsonify({"response":user.serialize()}),200
 
-@app.route('/Users', method=["POST"])
+@app.route('/Users', methods=['POST'])
 def create_user():
     body_name=request.json.get("name")
     body_nick=request.json.get("nick")
@@ -85,7 +85,7 @@ def create_user():
     db.session.commit()
     return jsonify({"name":user.name, "nick":user.nick, "email":user.email, "password":user.password, "msg":"Usuario creado"})
 
-@app.route('/Users/favorites', method=[GET])
+@app.route('/Users/favorites', methods=['GET'])
 def get_user_favorites():
     favorites = Favorites.query.all()
     favorites.serialize = list(map(lambda x: x.serialize(),favorites))
