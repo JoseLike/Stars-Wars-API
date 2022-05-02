@@ -74,10 +74,11 @@ def get_one_user(user_id):
     user = Users.query.get(user_id)
     return jsonify({"response":user.serialize()}),200
 
-@app.route('/Users/favorite', method=[GET])
+@app.route('/Users/favorites', method=[GET])
 def get_user_favorites():
-    favorites = Users.query.get(user_id)
-    return jsonify({"response":user.serialize()}),200
+    favorites = Favorites.query.all()
+    favorites.serialize = list(map(lambda x: x.serialize(),favorites))
+    return jsonify({"response":favorites.serialize()}),200
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
