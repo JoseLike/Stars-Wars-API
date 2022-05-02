@@ -74,6 +74,17 @@ def get_one_user(user_id):
     user = Users.query.get(user_id)
     return jsonify({"response":user.serialize()}),200
 
+@app.route('/Users', method=["POST"])
+def create_user():
+    body_name=request.json.get("name")
+    body_nick=request.json.get("nick")
+    body_email=request.json.get("email")
+    body_password=request.json.get("password")
+    user=Users(name=body_name, nick=body_nick, email=body_email, password=body_password)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({"name":user.name, "nick":user.nick, "email":user.email, "password":user.password, "msg":"Usuario creado"})
+
 @app.route('/Users/favorites', method=[GET])
 def get_user_favorites():
     favorites = Favorites.query.all()

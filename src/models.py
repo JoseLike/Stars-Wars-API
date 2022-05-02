@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 db = SQLAlchemy()
 
     
-class User(db.Model):
+class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
     nick = db.Column(db.String(250), nullable=False, unique=True)
@@ -21,8 +21,8 @@ class User(db.Model):
 
 class Favorites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    favourite_user = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User')
+    favourite_user = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('Users')
     favourite_char = db.Column(db.Integer, db.ForeignKey('characters.id'))
     character = db.relationship('Characters')
     favourite_planets = db.Column(db.Integer, db.ForeignKey('planets.id'))
