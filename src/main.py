@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, Users, People, Favorites, Vehicles, Planets
+from models import db, User, People, Favorites, Vehicles, Planets
 #from models import Person
 
 app = Flask(__name__)
@@ -63,15 +63,15 @@ def get_one_vehicle(vehicle_id):
     vehicle = Vehicles.query.get(vehicle_id)
     return jsonify({"response":vehicle.serialize()}),200
 
-@app.route('/Users', methods=['GET'])
+@app.route('/User', methods=['GET'])
 def get_all_users():
-    users = Users.query.all()
+    users = User.query.all()
     users.serialize = list(map(lambda x: x.serialize(),users))
     return jsonify({"response":users.serialize}),200
 
-@app.route('/Users/<int:user_id>', methods=['GET'])
+@app.route('/User/<int:user_id>', methods=['GET'])
 def get_one_user(user_id):
-    user = Users.query.get(user_id)
+    user = User.query.get(user_id)
     return jsonify({"response":user.serialize()}),200
 
 @app.route('/Users', methods=['POST'])
@@ -83,13 +83,41 @@ def create_user():
     user=Users(name=body_name, nick=body_nick, email=body_email, password=body_password)
     db.session.add(user)
     db.session.commit()
-    return jsonify({"name":user.name, "nick":user.nick, "email":user.email, "password":user.password, "msg":"Usuario creado"})
+    return jsonify({"name":user.name, "nick":user.nick, "email":user.email, "password":user.password, "msg":"Usuario creado"}),200
 
-@app.route('/Users/favorites', methods=['GET'])
-def get_user_favorites():
-    favorites = Favorites.query.all()
+@app.route('/Users/<int:user_id>/favorites', methods=['GET'])
+def get_user_favorites(user_id):
+    favorites = Favorites.query.filter_by(favourite_user = user_id).first()
     favorites.serialize = list(map(lambda x: x.serialize(),favorites))
     return jsonify({"response":favorites.serialize()}),200
+
+@app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
+def add_planet_favorite(planet_id):
+    fav_planet= Favorites({favourite_planets: planet_id})
+    db.session.add(fav_planet)
+    db.session.commit()
+    return jsonify({"favourite_planet":fav_planet, "msg":"Planetta favorita agregado"}),200
+
+@app.route('/favorite/people/<int:people_id>', methods=['POST'])
+def add_people_favorite(people_id):
+    fav_people= Favorites({favourite_char: people_id})
+    db.session.add(fav_people)
+    db.session.commit()
+    return jsonify({"favourite_char":fav_planet, "msg":"Personaje favorito agregado"}),200
+
+@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+def delete_planet_favorite(planet_id):
+    del_fav_planet= Favorites.query.filter_by(favourite_char = planet_id).first()
+    db.session.delete(del_fav_planet)
+    db.session.commit()
+    return jsonify({"deleted":True}),200
+
+@app.route('/favorite/people/<int:people_id>', methods=['DELETE'])
+def del_people_fav(people_id):
+    del_fav_people= Favorites.query.filter_by(favourite_planets=people_id).first()
+    db.session.delete(del_fav_people)
+    db.session.commit()
+    return jsonify({"deleted":True}),200
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
