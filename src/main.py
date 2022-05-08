@@ -32,20 +32,20 @@ def sitemap():
 
 @app.route('/People', methods=['GET'])
 def get_all_characters():
-    characters = Characters.query.all()
-    characters.serialize = list(map(lambda x: x.serialize(),characters))
-    return jsonify({"response":characters.serialize}),200
+    characters = People.query.all()
+    characters_serialize = list(map(lambda x: x.serialize(),characters))
+    return jsonify({"response":characters_serialize}),200
 
 @app.route('/People/<int:people_id>', methods=['GET'])
 def get_one_character(people_id):
-    character = Characters.query.get(people_id)
+    character = People.query.get(people_id)
     return jsonify({"response":character.serialize()}),200
 
 @app.route('/Planets', methods=['GET'])
 def get_all_planets():
     planets = Planets.query.all()
-    planets.serialize = list(map(lambda x: x.serialize(),planets))
-    return jsonify({"response":planets.serialize}),200
+    planets_serialize = list(map(lambda x: x.serialize(),planets))
+    return jsonify({"response":planets_serialize}),200
 
 @app.route('/Planets/<int:planet_id>', methods=['GET'])
 def get_one_planet(planet_id):
@@ -55,19 +55,19 @@ def get_one_planet(planet_id):
 @app.route('/Vehicles', methods=['GET'])
 def get_all_vehicles():
     vehicles = Vehicles.query.all()
-    vehicles.serialize = list(map(lambda x: x.serialize(),vehiscles))
-    return jsonify({"response":planets.serialize}),200
+    vehicles_serialize = list(map(lambda x: x.serialize(),vehiscles))
+    return jsonify({"response":planets_serialize}),200
 
 @app.route('/Vehicles/<int:vehicle_id>', methods=['GET'])
 def get_one_vehicle(vehicle_id):
     vehicle = Vehicles.query.get(vehicle_id)
     return jsonify({"response":vehicle.serialize()}),200
 
-@app.route('/User', methods=['GET'])
+@app.route('/Users', methods=['GET'])
 def get_all_users():
     users = User.query.all()
-    users.serialize = list(map(lambda x: x.serialize(),users))
-    return jsonify({"response":users.serialize}),200
+    users_serialize = list(map(lambda x: x.serialize(),users))
+    return jsonify({"response":users_serialize}),200
 
 @app.route('/User/<int:user_id>', methods=['GET'])
 def get_one_user(user_id):
@@ -80,7 +80,7 @@ def create_user():
     body_nick=request.json.get("nick")
     body_email=request.json.get("email")
     body_password=request.json.get("password")
-    user=Users(name=body_name, nick=body_nick, email=body_email, password=body_password)
+    user=User(name=body_name, nick=body_nick, email=body_email, password=body_password)
     db.session.add(user)
     db.session.commit()
     return jsonify({"name":user.name, "nick":user.nick, "email":user.email, "password":user.password, "msg":"Usuario creado"}),200
@@ -91,30 +91,30 @@ def get_user_favorites(user_id):
     favorites.serialize = list(map(lambda x: x.serialize(),favorites))
     return jsonify({"response":favorites.serialize()}),200
 
-@app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
-def add_planet_favorite(planet_id):
-    fav_planet= Favorites({favourite_planets: planet_id})
+@app.route('/favorites/<int:user_id>/planet/<int:planet_id>', methods=['POST'])
+def add_planet_favorite(user_id,planet_id):
+    fav_planet= Favorites(favourite_user= user_id ,favourite_planets= planet_id)
     db.session.add(fav_planet)
     db.session.commit()
     return jsonify({"favourite_planet":fav_planet, "msg":"Planetta favorita agregado"}),200
 
-@app.route('/favorite/people/<int:people_id>', methods=['POST'])
-def add_people_favorite(people_id):
-    fav_people= Favorites({favourite_char: people_id})
+@app.route('/favorites/<int:user_id>/people/<int:people_id>', methods=['POST'])
+def add_people_favorite(user_id,people_id):
+    fav_people= Favorites(favourite_user= user_id, favourite_char= people_id)
     db.session.add(fav_people)
     db.session.commit()
     return jsonify({"favourite_char":fav_planet, "msg":"Personaje favorito agregado"}),200
 
-@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+@app.route('/favorites/planet/<int:planet_id>', methods=['DELETE'])
 def delete_planet_favorite(planet_id):
-    del_fav_planet= Favorites.query.filter_by(favourite_char = planet_id).first()
+    del_fav_planet= Favorites.query.filter_by(favourite_planets = planet_id).first()
     db.session.delete(del_fav_planet)
     db.session.commit()
     return jsonify({"deleted":True}),200
 
 @app.route('/favorite/people/<int:people_id>', methods=['DELETE'])
 def del_people_fav(people_id):
-    del_fav_people= Favorites.query.filter_by(favourite_planets=people_id).first()
+    del_fav_people= Favorites.query.filter_by(favourite_char=people_id).first()
     db.session.delete(del_fav_people)
     db.session.commit()
     return jsonify({"deleted":True}),200

@@ -15,7 +15,6 @@ class User(db.Model):
             "id": self.id,
             "name": self.name,
             "nick": self.nick,
-            "password": self.password,
             "email": self.email
         }
 
@@ -34,9 +33,9 @@ class Favorites(db.Model):
         return {
             "id": self.id,
             "favorite_user": self.favourite_user,
-            "favorite_char": self.favourite_char,
-            "favorite_planets": self.favourite_planets,
-            "favorite_vehicles": self.favourite_vehicles
+            "favourite_char": self.favourite_char,
+            "favourite_planets": self.favourite_planets,
+            "favourite_vehicles": self.favourite_vehicles
         }
 
 class People(db.Model):
@@ -110,10 +109,12 @@ class Vehicles(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name,
+            "model": self.model,
             "description": self.description,
             "starship_class": self.starship_class,
+            "manufacturer": self.manufacturer,
             "cost_in_credits": self.cost_in_credits,
+            "length": self.length,
             "crew": self.crew,
             "passengers": self.passengers,
             "max_atmosphering_speed": self.max_atmosphering_speed,
