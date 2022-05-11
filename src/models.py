@@ -20,22 +20,22 @@ class User(db.Model):
 
 class Favorites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    favourite_user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User')
-    favourite_char = db.Column(db.Integer, db.ForeignKey('people.id'))
-    character = db.relationship('People')
-    favourite_planets = db.Column(db.Integer, db.ForeignKey('planets.id'))
+    char_id = db.Column(db.Integer, db.ForeignKey('people.id'))
+    people = db.relationship('People')
+    planets_id = db.Column(db.Integer, db.ForeignKey('planets.id'))
     planets = db.relationship('Planets')
-    favourite_vehicles = db.Column(db.Integer, db.ForeignKey('vehicles.id'))
+    vehicles_id = db.Column(db.Integer, db.ForeignKey('vehicles.id'))
     vehicles = db.relationship('Vehicles')
 
     def serialize(self):
         return {
             "id": self.id,
-            "favorite_user": self.favourite_user,
-            "favourite_char": self.favourite_char,
-            "favourite_planets": self.favourite_planets,
-            "favourite_vehicles": self.favourite_vehicles
+            "favourite_user": self.user_id,
+            "favourite_char": self.char_id,
+            "favourite_planets": self.planets_id,
+            "favourite_vehicles": self.vehicles_id
         }
 
 class People(db.Model):
